@@ -93,7 +93,7 @@ python3 manage.py loaddata demo
 python3 manage.py createsuperuser
 ```
 
-À ce niveau on peut tester le fonctionnement du serveur. Dans la configuration réseau de VirtualBox, NAT -> Avancé -> Redirection de ports -> 8000 vers 8000, 8080 vers 80 et 2222 vers 22.
+À ce niveau on peut tester le fonctionnement du serveur. Dans la configuration réseau de VirtualBox, NAT -> Avancé -> Redirection de ports -> 8000 vers 8000 (pour le premier test de `runserver`), 8080 vers 80 et 2222 vers 22.
 ```sh
 python3 manage.py runserver 0.0.0.0:8000 # ouvrir http://localhost:8000
 python3 manage.py runbridged # ne doit rien renvoyer
@@ -159,3 +159,51 @@ sudo supervisorctl status
 sudo nginx -t
 sudo service nginx restart
 ```
+
+Paramétrage
+-----------
+
+Il est temps d'accéder au site à l'adresse http://localhost:8080/
+
+Dans l'interface admin (login/mdp : `admin`/`admin`) on va dans Judges -> Ajouter. Name doit correspondre à l'id dans `.dmojrc`. Ensuite on regénère la clé d'authentification qu'on inscrit aussi dans `.dmojrc`, et on enregistre ce nouveau juge pour le site. Enfin, pour intégrer la nouvelle clé dans le juge on exécute `sudo supervisorctl restart judge`.
+
+Pour vérifier que le site fonctionne, on doit pouvoir résoudre le problème d'exemple A plus B, avec par exemple en Python3 :
+```python3
+for _ in range(int(input())):
+	print(sum(int(i) for i in input().split()))
+```
+
+Création d'un nouveau sujet de TD
+---------------------------------
+
+Les problèmes des compétitions de programmation ont un format standard à respecter :
+* Les énoncés demandent le calcul de données de sortie pour chaque donnée d'entrée.
+* Les programmes doivent prendre leurs entrées sur `stdin` et écrire leurs sorties sur `stdout`.
+* Les entrées sont dimensionnées en fonction de la complexité de l'algorithme attendu, avec des limites en temps et mémoire d'exécution. Par exemple O(n) = 1_000_000, O(log n) = 100_000, O(n²) = 1_000.
+* Des tests d'exemple sont fournis dans l'énoncé, et des tests supplémentaires secrets vérifient les cas critiques.
+
+Un sujet de TD sur DMOJ aura donc la structure suivante :
+* Description du contexte et du problème
+* Spécification du format des données d'entrée, avec toutes les bornes des valeurs possibles
+* Spécification du format des données de sortie
+* Exemple de couple entrées/sorties
+
+Pour créer un nouveau sujet de TD avec DMOJ on va dans Problèmes -> Ajouter.
+Là, il faut bien faire attention à ce qu'un utilisateur soit mentionné comme _Creator_ (autrement le problème ne pourra plus être édité).
+Le texte du problème est au format Markdown, avec l'utilisation de `~` pour activer un mode Math similaire à LaTeX ([plus d'informations](https://dmoj.readthedocs.io/en/latest/site/managing_problems/)).
+
+Une fois le problème enregistré, il s'agit de lui ajouter des tests.
+On conseille de faire un test pour chaque cas critique, ainsi que des tests de tailles croissantes pour approcher doucement la complexité visée.
+Les données d'entrée et sortie seront stockés dans des fichiers, qu'on nomme par exemple `<problem code>.X.in` et `<problem code>.X.out`, avec X le numéro de chaque test.
+On va sur la page du problème tel que vu par les étudiants, puis sur "Edit test data".
+Là on envoie les fichiers de tests compressés dans une archive zip, puis on clique sur Submit!
+Ensuite on fait correspondre chaque numéro de test avec chaque couple de fichiers.
+
+Les points donnés à chaque test permettent de calculer la proportion de points de points gagnés sur le problème.
+Par exemple, pour trois tests à 1 point chacun et un problème qui vaut 30 points, la réussite de chaque test comptera comme 10 points.
+
+Gestion de groupes de TDs
+-------------------------
+
+On crée une nouvelle organisation (Admin -> Organisations) par groupe, et on demande aux étudiants de s'y inscrire dans leur page de profil (champ Affiliated organizations). Pour les obliger à renseigner leur groupe, on impose que tous les problèmes de TDs ne soient visible que par les membres des groupes de TDs.
+
