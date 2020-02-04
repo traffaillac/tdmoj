@@ -1,12 +1,12 @@
 L'objectif de TDMOJ est de documenter l'utilisation de la plateforme de compétitions de programmation DMOJ, pour la gestion de TDs en classe.
-Ce document reprend et clarifie les instructions données dans la [documentation officielle](https://dmoj.readthedocs.io/en/latest/README/), en documentant également les besoins essentiels en enseignement.
+Ce document reprend et simplifie les instructions données dans la [documentation officielle](https://dmoj.readthedocs.io/en/latest/README/), en documentant également quelques besoins essentiels en enseignement.
 
 Installation
 ------------
 
 DMOJ est développé et testé principalement pour Debian Linux, sur les autres systèmes il faudra une machine virtuelle comme [VirtualBox](https://www.virtualbox.org/).
 
-Télécharger l'image d'installation de Debian sur https://www.debian.org/CD/netinst/ et l'installer sur une machine. Les fichiers de configuration suivants présupposent un compte utilisateur nommé `dmoj`. Notez que pour utiliser sudo il _ne faut pas_ créer un compte root.
+Télécharger l'image d'installation de Debian sur https://www.debian.org/CD/netinst/ et l'installer sur une machine. Les fichiers de configuration suivants présupposent un compte utilisateur nommé `dmoj`. Notez que pour utiliser sudo il _ne faut pas_ créer un compte root. Dès maintenant vous pouvez aussi paramétrer la configuration réseau de VirtualBox : NAT -> Avancé -> Redirection de ports -> 8000 vers 8000 (pour le premier test avant production), 8080 vers 80 et 2222 vers 22.
 
 Pour travailler de l'extérieur de la machine :
 ```sh
@@ -78,7 +78,10 @@ Copier https://github.com/DMOJ/docs/blob/master/sample_files/local_settings.py d
 * décommenter `STATIC_URL` et `STATICFILES_STORAGE`
 * modifier le nom du fichier de log de `bridge` dans `LOGGING`
 
-Pour vérifier que tout fonctionne à ce niveau : `python3 manage.py check`
+Pour vérifier que tout fonctionne à ce niveau :
+```sh
+python3 manage.py check
+```
 
 Paramétrage du site Django (lancer manage.py sans argument pour une liste des commandes disponibles) :
 ```sh
@@ -93,9 +96,9 @@ python3 manage.py loaddata demo
 python3 manage.py createsuperuser
 ```
 
-À ce niveau on peut tester le fonctionnement du serveur. Dans la configuration réseau de VirtualBox, NAT -> Avancé -> Redirection de ports -> 8000 vers 8000 (pour le premier test de `runserver`), 8080 vers 80 et 2222 vers 22.
+À ce niveau on peut tester le fonctionnement du serveur :
 ```sh
-python3 manage.py runserver 0.0.0.0:8000 # ouvrir http://localhost:8000
+python3 manage.py runserver 0.0.0.0:8000 # puis visiter http://localhost:8000
 python3 manage.py runbridged # ne doit rien renvoyer
 ```
 
@@ -150,7 +153,7 @@ stdout_logfile=/home/dmoj/judge.log
 stderr_logfile=/home/dmoj/judge.log
 ```
 
-Tester le tout :
+Lancer le tout :
 ```sh
 uwsgi uwsgi.ini
 sudo supervisorctl update
