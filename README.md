@@ -168,7 +168,10 @@ Paramétrage
 
 Il est temps d'accéder au site à l'adresse http://localhost:8080/
 
-Dans l'interface admin (login/mdp : `admin`/`admin`) on va dans Judges -> Ajouter. Name doit correspondre à l'id dans `.dmojrc`. Ensuite on regénère la clé d'authentification qu'on inscrit aussi dans `.dmojrc`, et on enregistre ce nouveau juge pour le site. Enfin, pour intégrer la nouvelle clé dans le juge on exécute `sudo supervisorctl restart judge`.
+Dans l'interface admin (login/mdp : `admin`/`admin`) on va dans Judges -> Ajouter. Name doit correspondre à l'id dans `.dmojrc`. Ensuite on regénère la clé d'authentification qu'on inscrit aussi dans `.dmojrc`, et on enregistre ce nouveau juge pour le site. Enfin, pour intégrer la nouvelle clé dans le juge on exécute :
+```sh
+sudo supervisorctl restart judge
+```
 
 Pour vérifier que le site fonctionne, on doit pouvoir résoudre le problème d'exemple A plus B, avec par exemple en Python3 :
 ```python3
