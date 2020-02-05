@@ -9,19 +9,19 @@ DMOJ est développé et testé principalement pour Debian Linux, sur les autres 
 Télécharger l'image d'installation de Debian sur https://www.debian.org/CD/netinst/ et l'installer sur une machine. Les fichiers de configuration suivants présupposent un compte utilisateur nommé `dmoj`. Notez que pour utiliser sudo il _ne faut pas_ créer un compte root. Dès maintenant vous pouvez aussi paramétrer la configuration réseau de VirtualBox : NAT -> Avancé -> Redirection de ports -> 8000 vers 8000 (pour le premier test avant production), 8080 vers 80 et 2222 vers 22.
 
 Pour travailler de l'extérieur de la machine :
-```sh
+```shell
 sudo apt install openssh-server
 ```
 
 Pour travailler dans l'environnement de bureau intégré à la machine, on paramètre le clavier avec :
-```sh
+```shell
 sudo apt install keyboard-configuration
 sudo dpkg-reconfigure keyboard-configuration
 sudo service keyboard-setup restart
 ```
 
 Pour ajouter le support du copier-coller avec une machine virtuelle, on fait Devices -> Insert Guest Additions CD image... et Devices -> Shared Clipboard -> Bidirectional, puis :
-```sh
+```shell
 sudo apt install build-essential module-assistant
 sudo m-a prepare
 sudo mount /media/cdrom
@@ -30,14 +30,14 @@ sudo reboot now
 ```
 
 Installation groupée de paquets :
-```sh
+```shell
 sudo apt install curl
 curl -sL http://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt install git gcc g++ make libxml2-dev libxslt1-dev zlib1g-dev gettext python3-dev python3-pip python3-venv mariadb-server libmariadb-dev-compat supervisor nginx libseccomp-dev nodejs
 ```
 
 Paramétrage de NodeJS :
-```sh
+```shell
 mkdir ~/.npm-global
 npm config set prefix '~/.npm-global'
 cat >.profile <<EOF
@@ -50,7 +50,7 @@ npm i -g sass postcss-cli autoprefixer
 ```
 
 Création de la base de données (donner le mot de passe du compte `dmoj`) :
-```sh
+```shell
 sudo mysql
 MariaDB [(none)]> CREATE DATABASE dmoj DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON dmoj.* to 'dmoj'@'localhost' IDENTIFIED BY '<password>';
@@ -58,7 +58,7 @@ MariaDB [(none)]> exit
 ```
 
 Création d'un espace local pour les paquets Python et téléchargement des fichiers du site (ignorer les messages d'erreur `Failed building wheel for ...` qui sont un format de paquet optionnel) :
-```sh
+```shell
 python3 -m venv site
 cd site
 . bin/activate
@@ -79,12 +79,12 @@ Copier https://github.com/DMOJ/docs/blob/master/sample_files/local_settings.py d
 * modifier le nom du fichier de log de `bridge` dans `LOGGING`
 
 Pour vérifier que tout fonctionne à ce niveau :
-```sh
+```shell
 python3 manage.py check
 ```
 
 Paramétrage du site Django (lancer manage.py sans argument pour une liste des commandes disponibles) :
-```sh
+```shell
 ./make_style.sh
 python3 manage.py collectstatic
 python3 manage.py compilemessages
@@ -97,7 +97,7 @@ python3 manage.py createsuperuser
 ```
 
 À ce niveau on peut tester le fonctionnement du serveur :
-```sh
+```shell
 python3 manage.py runserver 0.0.0.0:8000 # puis visiter http://localhost:8000
 python3 manage.py runbridged # ne doit rien renvoyer
 ```
@@ -124,7 +124,7 @@ Copier https://github.com/DMOJ/docs/blob/master/sample_files/nginx.conf dans le 
 * dans `location /static`, retirer `root` et ajouter `alias /home/dmoj/site/site/static`
 
 Installation du juge :
-```sh
+```shell
 cd ~
 python3 -m venv judge
 cd judge
@@ -144,7 +144,7 @@ problem_storage_root:
 ```
 
 Créer un fichier `/etc/supervisor/conf.d/judge.conf` avec :
-```
+```ini
 [program:judge]
 command=/home/dmoj/judge/bin/dmoj -p 9999 localhost
 user=dmoj
@@ -154,7 +154,7 @@ stderr_logfile=/home/dmoj/judge.log
 ```
 
 Lancer le tout :
-```sh
+```shell
 uwsgi uwsgi.ini
 sudo supervisorctl update
 sudo supervisorctl start all
@@ -169,7 +169,7 @@ Paramétrage
 Il est temps d'accéder au site à l'adresse http://localhost:8080/
 
 Dans l'interface admin (login/mdp : `admin`/`admin`) on va dans Judges -> Ajouter. Name doit correspondre à l'id dans `.dmojrc`. Ensuite on regénère la clé d'authentification qu'on inscrit aussi dans `.dmojrc`, et on enregistre ce nouveau juge pour le site. Enfin, pour intégrer la nouvelle clé dans le juge on exécute :
-```sh
+```shell
 sudo supervisorctl restart judge
 ```
 
