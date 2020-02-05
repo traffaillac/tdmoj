@@ -179,6 +179,8 @@ for _ in range(int(input())):
 Création d'un nouveau sujet de TD
 ---------------------------------
 
+*Un exemple de sujet (rendu de monnaie) et des tests sont fournis dans les fichiers de ce dépôt.*
+
 Les problèmes des compétitions de programmation ont un format standard à respecter :
 * Les énoncés demandent le calcul de données de sortie pour chaque donnée d'entrée.
 * Les programmes doivent prendre leurs entrées sur `stdin` et écrire leurs sorties sur `stdout`.
